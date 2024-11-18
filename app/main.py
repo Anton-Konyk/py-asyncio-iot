@@ -17,23 +17,15 @@ async def main() -> None:
     service = IOTService()
 
     # create and register a few devices
-    # hue_light = HueLightDevice()
-    # speaker = SmartSpeakerDevice()
-    # toilet = SmartToiletDevice()
     devices = [HueLightDevice(), SmartSpeakerDevice(), SmartToiletDevice()]
     connections = await asyncio.gather(*[connect(device, service) for device in devices])
-    print(connections)
-
-    # hue_light_id = service.register_device(hue_light)
-    # speaker_id = service.register_device(speaker)
-    # toilet_id = service.register_device(toilet)
 
     # create a few programs
-    # wake_up_program = [
-    #     Message(hue_light_id, MessageType.SWITCH_ON),
-    #     Message(speaker_id, MessageType.SWITCH_ON),
-    #     Message(speaker_id, MessageType.PLAY_SONG, "Rick Astley - Never Gonna Give You Up"),
-    # ]
+    wake_up_program = [
+        Message(connections[0], MessageType.SWITCH_ON),
+        Message(connections[1], MessageType.SWITCH_ON),
+        Message(connections[2], MessageType.PLAY_SONG, "Rick Astley - Never Gonna Give You Up"),
+    ]
     #
     # sleep_program = [
     #     Message(hue_light_id, MessageType.SWITCH_OFF),
@@ -45,7 +37,7 @@ async def main() -> None:
     # # run the programs
     # service.run_program(wake_up_program)
     # service.run_program(sleep_program)
-
+    await service.run_program(wake_up_program)
 
 if __name__ == "__main__":
     start = time.perf_counter()
