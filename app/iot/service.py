@@ -48,6 +48,12 @@ class IOTService:
         #     self.send_msg(msg)
         print("=====END OF PROGRAM======")
 
+    async def run_sequence(self, functions: list[Awaitable[Any]]) -> None:
+        print("=====RUNNING PROGRAM======")
+        for function in functions:
+            await function
+        print("=====END OF PROGRAM======")
+
     async def run_parallel(self, program: list[Message]) -> None:
         print("=====RUNNING PARALLEL PROGRAMS======")
         await asyncio.gather(*[self.send_msg(msg) for msg in program])
