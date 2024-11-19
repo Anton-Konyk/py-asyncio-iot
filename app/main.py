@@ -24,10 +24,14 @@ async def main() -> None:
     toilet_id = connections[2]
 
     # create a few programs
-    wake_up_program = [
-        Message(connections[0], MessageType.SWITCH_ON),
-        Message(connections[1], MessageType.SWITCH_ON),
-        Message(connections[2], MessageType.PLAY_SONG, "Rick Astley - Never Gonna Give You Up"),
+    parallel_program_1 = [
+        Message(hue_light_id, MessageType.SWITCH_ON),
+        Message(speaker_id, MessageType.SWITCH_ON),
+        Message(toilet_id, MessageType.FLUSH),
+    ]
+    parallel_program_2 = [
+        Message(toilet_id, MessageType.PLAY_SONG, "Rick Astley - Never Gonna Give You Up"),
+        Message(toilet_id, MessageType.CLEAN),
     ]
     #
     # sleep_program = [
@@ -41,6 +45,16 @@ async def main() -> None:
     # service.run_program(wake_up_program)
     # service.run_program(sleep_program)
     await service.run_program(wake_up_program)
+    parallel_program_3 = [
+        Message(hue_light_id, MessageType.SWITCH_OFF),
+        Message(speaker_id, MessageType.SWITCH_OFF),
+    ]
+    sequence_program = [
+        service.run_parallel(parallel_program_1),
+        service.run_parallel(parallel_program_2),
+        service.run_parallel(parallel_program_3)
+    ]
+
 
 if __name__ == "__main__":
     start = time.perf_counter()
